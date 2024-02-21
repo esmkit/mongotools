@@ -1,9 +1,9 @@
 {
-  "name": "@esmkit/boilerplate",
+  "name": "@esmkit/mongotools",
   "version": "0.1.0",
-  "description": "",
+  "description": "a mongotools wrapper for nodejs.",
   "author": "Billgo <hi@billgo.me>",
-  "bugs": "https://github.com/esmkit/boilerplate/issues",
+  "bugs": "https://github.com/esmkit/mongotools/issues",
   "license": "MIT",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -33,7 +33,9 @@
     "build:esm": "bunx tsup",
     "example": "bun run --watch examples/index.ts"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dropbox-v2-api": "^2.5.10"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.5.3",
     "@devjskit/copy-files": "^1.0.0",
