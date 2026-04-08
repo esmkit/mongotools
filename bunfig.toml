@@ -1,5 +1,5 @@
 [install]
-registry = { url = "https://registry.npmjs.org" }
+registry = { token = "$NPM_TOKEN",url = "https://registry.npmjs.org" }
 
 # [test]
 # preload = "./tests/setupTests.tsx"
