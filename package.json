@@ -1,6 +1,6 @@
 {
   "name": "@esmkit/mongotools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "a mongotools wrapper for nodejs.",
   "author": "Billgo <hi@billgo.me>",
   "bugs": "https://github.com/esmkit/mongotools/issues",
@@ -32,9 +32,6 @@
     "build:bun": "bun run bun.build.mjs",
     "build:esm": "bunx tsup",
     "example": "bun run --watch examples/index.ts"
-  },
-  "dependencies": {
-    "dropbox-v2-api": "^2.5.10"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.3",

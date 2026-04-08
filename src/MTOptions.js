@@ -47,13 +47,6 @@ class MTOptions {
     this.dropBeforeRestore = "dropBeforeRestore" in opt ? opt.dropBeforeRestore : false; // drop db before restore
     this.deleteDumpAfterRestore = "deleteDumpAfterRestore" in opt ? opt.deleteDumpAfterRestore : false; // delete dump after restore
 
-    //~ dropbox
-    // create a dropbox app to get a token : https://www.dropbox.com/developers/apps/  "Generated access token"
-    this.dropboxToken = "dropboxToken" in opt ? opt.dropboxToken : process.env.MT_DROPBOX_TOKEN || null;
-    this.dropboxLocalPath =
-      "dropboxLocalPath" in opt ? opt.dropboxLocalPath : process.env.MT_DROPBOX_LOCAL_PATH || "dropbox";
-    this.dropboxEnabled = this.dropboxToken && this.dropboxToken.length > 0;
-
     //~ rotation
     // rotationDryMode       : dont do delete actions, just print it
     this.rotationDryMode = "rotationDryMode" in opt ? opt.rotationDryMode : process.env.MT_ROTATION_DRY_MODE === "true";
@@ -79,12 +72,6 @@ class MTOptions {
 
   getPath() {
     return "path" in this ? this.path : "backup";
-  }
-  getDropboxPath() {
-    return "/" + this.getPath();
-  }
-  getDropboxLocalPath(options) {
-    return "dropboxLocalPath" in this ? this.dropboxLocalPath : "dropbox";
   }
 }
 

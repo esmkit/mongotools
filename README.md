@@ -5,11 +5,6 @@ This project provides 2 wrappers :
 - **mongodump**,
 - **mongorestore**.
 
-This project also include **dropbox** integration feature to
-
-- dump and upload onto dropbox,
-- restore from a dropbox hosted mongo backup.
-
 There is an autonomous feature called **rotation** that provide a backup file rotation mechanism
 
 - remove N oldest deprecated backups.
@@ -80,24 +75,6 @@ MSYS_NO_PATHCONV=1 MT_COLLECTION=shippingprices MT_SHOW_COMMAND=true node mt res
 # Note that collection option will produce wildcard in nsInclude arg '--nsInclude myDb.*'
 ```
 
-### Dropbox feature
-
-You have a dropbox access token in your preferences, (cf. "Mongo tools options")
-
-```
-# create a mongo dump is the same command
-node mt dump
-# restore a mongo dropbox dump
-node mt restore /backup/myDatabase__2020-11-08_150102.gz
-
-# git bash for windows users having absolute path issue could use the following command
-unalias node
-MSYS_NO_PATHCONV=1 node mt restore /backup/myDatabase__2020-11-08_150102.gz
-
-# rotate local and dropbox backup files
-node mt rotation
-```
-
 ## Library use
 
 ### Install dependency
@@ -118,7 +95,6 @@ const mtOptions = {
         db: 'myDb',
         port: 17017,
         path: '/opt/myapp/backups',
-        dropboxToken: process.env.MYAPP_DROPBOX_SECRET_TOKEN
       };
 ```
 
@@ -258,23 +234,6 @@ mongoTools.mongorestore({
 })
 .catch((err) => console.error("error", err) );
 ```
-
-### Dropbox options
-
-You could create a dropbox app to get a token : cf. https://www.dropbox.com/developers/apps/ "Generated access token"
-
-| option             | env                   | required | default value | description                             |
-| ------------------ | --------------------- | -------- | ------------- | --------------------------------------- |
-| `dropboxToken`     | MT_DROPBOX_TOKEN      | false    | (none)        | activate dropbox feature if present     |
-| `dropboxLocalPath` | MT_DROPBOX_LOCAL_PATH | false    | "dropbox"     | local directory to receive dropbox dump |
-
-When a token is set,
-
-- the `list` feature will list the `/` + `path` dropbox directory
-- the `mongodump` feature will upload the dump onto `/` + `path` dropbox directory (in addition to spawn it locally),
-- the `mongorestore` feature will use `dumpFile` as dropbox dump location
-  and retrieve it into `dropboxLocalPath` before doing the mongorestore action.
-
 ### Rotation options
 
 A safe time windows is defined by :
@@ -304,6 +263,3 @@ MT_ROTATION_WINDOWS_DAYS=3 \ node mt rotation
 
 Example details: if there is a backup that is more than 3 days old, keep 2 newer ones and delete the 10 oldest.
 
-Dropbox limits:
-
-- rotation feature will not apply if dropbox backup target directory content contains more than 2000 files.

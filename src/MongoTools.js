@@ -1,13 +1,11 @@
 import MTWrapper from "./MTWrapper";
 import MTFilesystem from "./MTFilesystem";
-import MTDropbox from "./MTDropbox";
 import MTOptions from "./MTOptions";
 import MTEncrypt from "./MTEncrypt";
 
 class MongoTools {
   constructor() {
     this.wrapper = new MTWrapper();
-    this.dbx = new MTDropbox();
     this.fs = new MTFilesystem();
     this.enc = new MTEncrypt();
   }
@@ -21,14 +19,7 @@ class MongoTools {
       if (filesystem === undefined) {
         return;
       }
-      if (!options.dropboxEnabled) {
-        return resolve({ path, filesystem });
-      }
-      const dropbox = await mt.dbx.listFromDropbox(options).catch(reject);
-      if (dropbox === undefined) {
-        return;
-      }
-      return resolve({ path, filesystem, dropbox });
+      return resolve({ path, filesystem });
     });
   }
 
@@ -46,12 +37,7 @@ class MongoTools {
             }
           }
 
-          // DEBUG // console.log(options.dropboxEnabled , JSON.stringify(dumpResult));
-          if (options.dropboxEnabled && dumpResult.fileName && dumpResult.fullFileName) {
-            mt.dbx.mongoDumpUploadOnDropbox(options, dumpResult).then(resolve).catch(reject);
-          } else {
-            resolve(dumpResult);
-          }
+          resolve(dumpResult);
         })
         .catch(reject);
     });
@@ -74,20 +60,11 @@ class MongoTools {
 
   mongorestore(opt) {
     const options = assumeOptions(opt);
-    const path = options.getPath();
     const mt = this;
     return new Promise(async function (resolve, reject) {
       var toRestore = options.dumpFile;
       if (!toRestore) {
         return reject("dumpFile is required");
-      }
-      if (!toRestore.startsWith(path) && options.dropboxEnabled === true) {
-        const downloadResult = await mt.dbx.mongorestoreDownloadFromDropbox(options).catch(reject);
-        if (downloadResult === undefined) {
-          return;
-        }
-        console.log(downloadResult.message);
-        toRestore = downloadResult.fullFileName;
       }
       if (options.decrypt === true) {
         toRestore = await mt.decryptDump(options, toRestore).catch(reject);
@@ -140,15 +117,6 @@ class MongoTools {
         .catch(reject);
       if (filesystemRotationResult == undefined) {
         return;
-      }
-      if (options.dropboxEnabled) {
-        const dropboxRotationResult = await mt.dbx
-          .rotation(options, rotationDryMode, ctimeMsMax, cleanCount, minCount)
-          .catch(reject);
-        if (dropboxRotationResult == undefined) {
-          return;
-        }
-        resolve({ filesystem: filesystemRotationResult, dropbox: dropboxRotationResult });
       }
       resolve({ filesystem: filesystemRotationResult });
     });

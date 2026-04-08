@@ -183,7 +183,7 @@ class MTWrapper {
           resolve({
             message: `db:${database} - dump created`,
             status: dump.status,
-            fileName, // re-used by dropbox
+            fileName,
             fullFileName,
             stdout: dump.stdout ? dump.stdout.toString() : null,
             stderr: dump.stderr ? dump.stderr.toString() : null,
